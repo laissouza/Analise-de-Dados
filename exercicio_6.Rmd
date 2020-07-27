@@ -1,0 +1,299 @@
+---
+title: "Exercicio 6"
+author: "Laís Oliveira"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Neste exercício usaremos o banco de dados do ESEB 2018. Para maiores detalhes sobre o survey, ver neste [link](https://www.cesop.unicamp.br/por/eseb). O questionário da pesquisa de 2018 está [aqui](https://www.cesop.unicamp.br/vw/1IMr0S64wNQ_MDA_91ea3_/quest_04622.pdf) e pode ser consultado para ter maiores detalhes sobre as variáveis.
+
+### O banco de dados está disponível no site do CESOP para usuários cadastrados. Para facilitar o acesso, deixei o banco de dados dispónivel no seguinte endereço: https://github.com/MartinsRodrigo/Analise-de-dados/blob/master/04622.sav
+
+### Baixe o banco de dados pelo R
+
+```{r}
+library(tidyverse)
+
+url <- "https://github.com/MartinsRodrigo/Analise-de-dados/raw/master/04622.sav"
+
+download.file(url, "banco.sav", mode = "wb")
+
+```
+
+### O banco foi feito em SPSS e está em formato SAV. Carregue-o
+
+```{r}
+library(haven)
+
+banco <- read_sav("banco.sav")
+```
+### Utilize as funções para observar o banco de dados
+
+```{r, message=FALSE}
+head(banco)
+tail(banco)
+str(banco)
+summary(banco)
+glimpse(banco)
+```
+
+### A variável Q1607 indica uma nota de 0 a 10 ao candidato Jair Bolsonaro. Valores acima de 10 representam respostas não uteis para nossa pesquisa. Represente graficamente esta variável apenas com os valores válidos e descreva o resultado.*OBS: transforme esta variável para númerica com a função `as.numeric()`.
+
+```{r}
+library(ggthemes)
+library(scales)
+
+banco_filtrado <- banco %>%
+  filter(Q1607 <= 10) %>%
+  mutate (Q1607 = as.numeric(Q1607))
+
+ggplot(banco_filtrado, aes(Q1607)) +
+  geom_histogram(aes(y=..density..),      
+                 binwidth= 1) +
+  geom_density()+
+  scale_y_continuous(labels = percent) +
+  theme_minimal()
+```
+  
+  O gráfico representa a avaliação do candidato Jair Bolsonaro, apresenta uma proporção de 28% de respondentes que atribuíram nota 10 ao candidato. Enquanto 23% atribuíram nota 0 ao candidato, indicando uma tendência às extremidades. No entanto, ao centro há uma significância de 10% dos respondentes atribuindo nota 5 a Jair Bolsonaro.
+
+### Vamos procurar entender o que está associado à aprovação deste candidato. Primeiro, vamos observar a idade dos respondentes com a variável D1A_ID. Represente esta variável graficamente.
+
+```{r}
+ggplot(banco, aes(D1A_ID)) +
+  geom_histogram(aes(y=..density..),      
+                 binwidth = 5) +
+  geom_density()+
+  geom_vline(aes(xintercept = mean(D1A_ID, na.rm = T))) +
+  scale_y_continuous(labels = percent) +
+  theme_minimal()
+
+```
+
+### Teste a associação entre a nota dada a Jair Bolsonaro e idade do respondente, explicando o resultado.
+
+```{r}
+cor.test(banco_filtrado$D1A_ID, banco_filtrado$Q1607)
+```
+
+  Com o valor positivo da correlação de 0.100 podemos inferir por uma associação positiva entre as variáveis (quando X aumenta Y aumenta), porém de intensidade fraca já que o valor se aproxima de zero. A existência da associação entre as variáveis observadas é reforçada pelo intervalo de confiança (0.059 0.140) não conter zero e pelo alto nível de confiança que se retira do p-valor de 1.235e-06.
+  
+### Faça uma regressao linear mostrando em que medida a idade do respondente explica a avaliação do candidato Jair Bolsonaro. Interprete o resultado.
+```{r}
+ggplot(banco_filtrado, aes(Q1607, D1A_ID)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+regressao <- lm(Q1607 ~ D1A_ID, data = banco_filtrado)
+
+summary(regressao)
+
+confint(regressao, level = 0.95)
+```
+  
+  O intercepto Y (alfa) tem valor estimado de 4.473 que é onde a reta se inicia no eixo Y, com erro padrão de 0.230 para mais e para menos e p-valor de <2e-16 indicando alta confiança para os valores desse coeficiente.
+  
+  Para os valores do coeficiente beta, que representa a mudança na variável dependente - avaliação do candidato -, temos valor estimado de 0.025, indicando um pequeno aumento (por ser um valor positivo) em Y para uma mudança unitária em X - idade dos respondentes. O erro padrão é de 0.005 para mais e para menos e p-valor de 1.24e-06, indicando alta confiança. O valor de 0.025 para beta explica a inclinação baixa (por ser um valor pequeno) e para cima (por ser um valor positivo). Além de nos mostrar uma tendência de que os mais velhos avaliam melhor o candidato.
+  
+  O r² no valor de 0.0100 nos indica que o modelo é capaz de explicar 1.00% da variável dependente, sugerindo que a qualidade do ajuste do modelo aos dados é baixa. O erro padrão residual no valor de 3.951 indica significante grau de desvio da média da amostra da média das possíveis médias amostrais, ou seja, a distância da média dos pontos dos dados da média da reta de regressão.
+  
+  O intervalo de confiança (4.02124705 4.92650904) representa a confiança de 95% do valor estimado estar ali contido. Como é o caso para este teste em particular (valor estimado: 4.473)
+  
+  
+### Observe a variável D3_ESCOLA dos respondentes relativa a educação Represente esta variável graficamente. #OBS: observe que esta variável está como numérica, apesar de ser categórica ordinal. No entanto, trate-a como numérica, indicando que quanto maior o valor, maior o nível educacional do respondente.
+
+```{r}
+ggplot(banco,aes(D3_ESCOLA)) +
+  geom_histogram(aes(y=..density..),      
+                 binwidth = 1) +
+  geom_density()+
+  geom_vline(aes(xintercept = mean(D3_ESCOLA, na.rm = T))) +
+  scale_y_continuous(labels = percent) +
+  theme_minimal()
+
+```
+
+### Teste a associação entre a nota dada a Jair Bolsonaro e educação do respondente, explicando o resultado.
+
+```{r}
+cor.test(banco_filtrado$D3_ESCOLA, banco_filtrado$Q1607)
+```
+  
+  O valor negativo de -0.067  para a correlação indica associação negativa entre as variáveis (ou seja, quando X aumenta, Y diminui) com intensidade baixa, visto que se aproxima de 0. A existência da relação entre as variáveis observadas é reforçada pelo intervalo (-0.107 -0.026), pois neste não contém o valor zero. Tendo tais resultados alto nível de confiança que se retira do p-valor de 0.001.
+  
+### Faça uma regressao linear mostrando em que medida a educação do respondente explica a avaliação do candidato Jair Bolsonaro. Interprete o resultado.
+
+```{r}
+ggplot(banco_filtrado, aes(Q1607, D3_ESCOLA)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+regressao <- lm(Q1607 ~ D3_ESCOLA, data = banco_filtrado)
+
+summary(regressao)
+
+confint(regressao, level = 0.95)
+```
+  
+  O intercepto Y (alfa) tem valor estimado de 6.102 onde a reta se inicia no eixo Y, com erro padrão de 0.195 para mais e para menos e p-valor de <2e-16 indicando alta confiança para os valores desse coeficiente.
+  
+  Para os valores do coeficiente beta, que representa a mudança na variável dependente - avaliação do candidato -, temos valor estimado de -0.118, indicando uma pequena diminuição (por ser um valor negativo) em Y para uma mudança unitária em X - nível educacional. O erro padrão é de 0.036 para mais e para menos e p-valor de 0.001, indicando alta confiança. O valor de -0.118 para beta explica a baixa inclinação da reta (por ser um valor pequeno) e a direção para baixo (por ser um valor negativo). Além de nos mostrar uma tendência quanto maior o nível de educação, pior será a avaliação do candidato.
+  
+  O r² no valor de 0.004 nos indica que o modelo é capaz de explicar 0.4% da variável dependente, sugerindo que qualidade do ajuste do modelo aos dados é muito baixa. O erro padrão residual no valor de 3.962 indica o grau de desvio da média da amostra da média das possíveis médias amostrais (distância dos dados observados para os dados estimados na reta de regressão).
+  
+  O intervalo de confiança (5.7188824  6.48557848) em nível de confiança de 95% contém o valor estimado na regressão, podendo estar errado em 5% das vezes.
+  
+  Apesar de encontrarmos bons níveis de confiança na amostra e tendência da variável independente que pode ajudar a explicar a avaliação do candidato, é preciso considerar que a qualidade do modelo é baixa; o que nos faz questionar se a melhor maneira de descrever as variáveis analisadas é mesmo pela função linear ou se poderíamos tornar o resultado mais robusto inserindo mais variáveis independentes que auxiliem na explicação da variável dependente
+  
+### Observe a variável D9A sobre renda dos respondentes. Represente esta variável graficamente. #OBS: note que os valores 9999998 e 9999999 devem ser descartados.
+
+```{r}
+banco_filtrado1 <- banco_filtrado %>%
+  filter(D9 < 9999998)
+
+ggplot(banco_filtrado1, aes(D9))+
+  geom_density()+
+  geom_vline(aes(xintercept = mean(D9, na.rm = T))) +
+  scale_y_continuous(labels = percent) +
+  theme_minimal()
+```
+
+### Teste a associação entre a nota dada a Jair Bolsonaro e renda do respondente, explicando o resultado.
+
+```{r}
+cor.test(banco_filtrado1$D9, banco_filtrado1$Q1607)
+```
+  
+  O valor positivo de 0.004 para a correlação indica que a associação entre as variáveis observadas é positiva (quando X aumenta, Y aumenta) com intensidade baixa, já que o valor se aproxima de zero. No entanto, o intervalo de confiança (-0.04150014  0.05052010) não confirma a existência de relação entre essas variáveis, pois o valor de zero se encontrada contido no intervalo. Além disso, temos um nível de confiança muito abaixo do aceitável na correlação visto o p-valor de  0.8474 o que representa insignificância estatística.
+  
+### Faça uma regressao linear mostrando em que medida a renda do respondente explica a avaliação do candidato Jair Bolsonaro. Interprete o resultado.
+
+```{r}
+ggplot(banco_filtrado1, aes(Q1607, D9)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+regressao <- lm(Q1607 ~ D9, data = banco_filtrado1)
+
+summary(regressao)
+
+confint(regressao, level = 0.95)
+```
+  
+  O intercepto Y (alfa) tem valor estimado de 5.578e+00 que é onde a reta se inicia no eixo Y, com erro padrão de 1.221e-01 para mais e para menos e p-valor de <2e-16 indicando alta confiança para os valores desse coeficiente.
+  
+  Para os valores do coeficiente beta, que representa a mudança na variável dependente - avaliação do candidato Bolsonaro -, temos valor estimado de 5.857e-06, indicando um pequeno aumento (por ser um valor positivo) em Y para uma mudança unitária em X - renda do respondente. O erro padrão é de 3.043e-05 para mais e para menos e p-valor de 0.847, indicando insignificância estatística. O valor de 5.857e-06 para beta explica a tendência da reta (**flat**, por ser um valor tão próximo a zero que indicaria que não há mudança em Y quando X varia) e a inclinação para cima (por ser um valor positivo). Além de nos mostrar uma tendência pela insignificância do efeito de X sobre Y.
+  
+  O r² no valor de 2.043e-05 nos indica que o modelo é capaz de explicar grau insignificante da variável dependente, sugerindo que a qualidade do ajuste do modelo aos dados é extremamente baixa. O erro padrão residual no valor de 3.959 indica o grau significante de desvio da média da amostra da média das possíveis médias amostrais, ou seja, distância dos dados observados para os dados estimados na reta de regressão.
+  
+  O intervalo de confiança (5.338700e+00 5.817597e+00) contém o valor estimado 5.578e+00 com 95% de confiança.
+  
+### Deixando as variáveis socio-economicas de lado, vamos analisar agora variáveis relativas a preferências políticas.
+
+### A variável Q1501 indica uma nota de 0 a 10 ao PT. Valores acima de 10 representam respostas não uteis para nossa pesquisa. Represente graficamente esta variável apenas com os valores válidos e descreva o resultado.
+
+```{r}
+banco_filtrado2 <- banco_filtrado %>%
+  filter(Q1501 <= 10)
+
+ggplot(banco_filtrado2, aes(Q1501)) +
+  geom_histogram(aes(y=..density..),      
+                 binwidth= 1) +
+  geom_density()+
+  scale_y_continuous(labels = percent) +
+  theme_minimal()
+```
+  
+  O gráfico sobre a avaliação do PT se distribui nas extremidades. Com maior proporção (40%) para atribuição da nota zero e menor proporção (15%) para a atribuição da nota 10. Sendo ainda uma proporção de 11% ao centro atribuindo nota 5. Indicando uma tendência a desaprovação dos respondentes ao PT.
+  
+### Teste a associação entre a nota dada a Jair Bolsonaro e a nota dada ao PT, explicando o resultado.
+
+```{r}
+cor.test(banco_filtrado2$Q1607, banco_filtrado2$Q1501)
+```
+  
+  O valor de -0.397 para a correlação indica uma associação negativa entre as variáveis observadas (quando X aumenta, Y diminui) com intensidade moderada já que o valor não está tão próximo a zero. A existência da relação entre as variáveis é reforçada pelo intervalo de confiança ( -0.4320901 -0.3618260) que não contém zero. Além do alto nível de confiança que se retira do p-valor de <2.2e-16.
+  
+### Faça uma regressao linear mostrando em que medida a nota dada ao PT pelo respondente explica a avaliação do candidato Jair Bolsonaro. Interprete o resultado.
+
+```{r}
+ggplot(banco_filtrado2, aes(Q1607, Q1501)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+regressao <- lm(Q1607 ~ Q1501, data = banco_filtrado2)
+
+summary(regressao)
+
+confint(regressao, level = 0.95)
+```
+  
+  O intercepto Y (alfa) tem valor estimado de 7.001 que é onde a reta se inicia no eixo Y, com erro padrão de 0.107 para mais e para menos e p-valor de <2e-16 indicando alta confiança para os valores desse coeficiente.
+  
+  Para os valores do coeficiente beta, que representa a mudança na variável dependente - avaliação do candidato Bolsonaro -, temos valor estimado de -0.411, indicando uma diminuição (por ser um valor negativo) em Y para uma mudança unitária em X - avaliação do PT. O erro padrão é de 0.020 para mais e para menos e p-valor de <2e-16, indicando alta confiança. O valor de -0.411 para beta explica a inclinação da reta para baixo (por ser um valor negativo). Além de nos mostrar uma tendência de que os que avaliam melhor o PT avaliam pior o candidato Bolsonaro.
+  
+  O r² no valor de 0.158 nos indica que o modelo é capaz de explicar 15.8% da variável dependente, sugerindo que a qualidade do ajuste do modelo aos dados é razoável. O erro padrão residual no valor de 3.643 indica grau significante de desvio da média da amostra da média das possíveis médias amostrais (distância dos dados observados para os dados estimados no modelo). Com p-valor da regressão em geral de <2.2e-16 indicando alta confiança nos resultados.
+  
+  Por fim, O intervalo de confiança (6.7909215  7.2122016) contém o valor estimado (7.001) com 95% de confiança, errando somente 5% das vezes.
+
+  
+### A variável Q18 indica uma auto-atribuição em uma escala ideologica de 0 a 10, da esquerda para a direita. Valores acima de 10 representam respostas não uteis para nossa pesquisa. Represente graficamente esta variável apenas com os valores válidos e descreva o resultado.
+
+```{r}
+banco_filtrado3 <- banco_filtrado %>%
+  filter(Q18 <= 10)
+
+ggplot(banco_filtrado, aes(Q18)) +
+  geom_histogram(aes(y=..density..),      
+                 binwidth= 5) +
+  geom_density()+
+  scale_y_continuous(labels = percent) +
+  theme_minimal()
+```
+  
+  O gráfico tem distribuição em suas extremidades por se tratar de identificação ideológica. A maior proporção de respondentes se distribui entre os valores de 0 a 1 e a menor proporção se encontra no valor de 10. O que indica uma maior tendência dos respondentes à esquerda do espectro político que à direita.
+  
+### Teste a associação entre a nota dada a Jair Bolsonaro e a auto-atribuição ideológica, explicando o resultado.
+
+```{r}
+cor.test(banco_filtrado3$Q1607, banco_filtrado3$Q18)
+```
+  
+  A correlação no valor de 0.353 indica uma associação positiva entre as variáveis já que o valor é positivo, com intensidade moderada pois não se aproxima tanto de zero. O intervalo de confiança (0.3133128 0.3927580) reafirma a existência de relação entre as variáveis pois não contém o valor zero. Com nível alto de confiança que se retira do p-valor < 2.2e-16.
+  
+### Faça uma regressao linear mostrando em que medida a auto-atribuição ideológica do repondente explica a avaliação do candidato Jair Bolsonaro. Interprete o resultado.
+
+```{r}
+ggplot(banco_filtrado3, aes(Q1607, Q18)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+regressao <- lm(Q1607 ~ Q18, data = banco_filtrado3)
+
+summary(regressao)
+
+confint(regressao, level = 0.95)
+```
+   
+   O intercepto Y (alfa) tem valor estimado de 3.006 onde a reta se inicia no eixo Y, com erro padrão de 0.185 para mais e para menos e p-valor de <2e-16 indicando alta confiança para os valores desse coeficiente (valor de Y quando X é igual a zero).
+  
+  Para os valores do coeficiente beta, que representa a mudança na variável dependente - avaliação do candidato Bolsonaro -, temos valor estimado de 0.409, indicando um aumento (por ser um valor positivo) em Y para uma mudança unitária em X - auto-atribuição ideológica. O erro padrão é de 0.025 para mais e para menos e p-valor de <2e-16, indicando alta confiança. O valor de 0.409 para beta explica a inclinação da reta para cima (por ser um valor positivo). Além de nos mostrar uma tendência de que os que se posicionam mais a direita do espectro político avaliam melhor o candidato Bolsonaro.
+  
+  O r² no valor de 0.125 nos indica que o modelo é capaz de explicar 12.5% da variável dependente, sugerindo que a qualidade do ajuste do modelo aos dados é razoável. O erro padrão residual no valor de 3.695 indica grau significante de desvio da média da amostra da média das possíveis médias amostrais (distância vertical dos dados observados para os dados estimados na reta de regressão). 
+  
+  O intervalo de confiança (2.6421919 3.3705353) contém o valor estimado 3.006 em 95% das vezes.
+  
+### Observando o resultado das regressões, você diria que qual tipo de variável explica mais a variação das notas atribuidas a Jair Bolsonaro, as socio-economicas ou políticas?
+
+  A capacidade do modelo para explicar a variação da variável dependente pode ser inferida pelo valor de r². De todas as variáveis analisadas a maior porcentagem de r² foi de 15.8% na regressão com a variável Q1501, que representa a avaliação do PT. A segunda variável com maior porcentagem de r² é a Q18, que representa a auto-atribuição ideológica, com 12.5%. Se avaliamos as variáveis politicas independentemente poderíamos explicar 18.3% da variável dependente, já que somamos o valor de r² da variável de auto-atribuição ideológica com a variável da avaliação do PT. Enquanto as variáveis sócio economicas avaliadas independentemente somam r² 1.5%. Assim, podemos concluir que as variáveis políticas são capazes de explicar melhor as notas atribuidas a Jair Bolsonaro que as variáveis socio-economicas.
+
+### Observando o resultado das regressões, você diria que algum modelo errou menos comparado aos outros na nota prevista atribuída a Jair Bolsonaro?
+
+  Para avaliarmos os erros médios dos modelos analisados verificamos o erro padrão residual de cada modelo, que nos indica a distância da média dos valores observados para a média dos valores estimados, ou seja, a distancia pontos dos dados observados para a reta do modelo de regressão. O menor erro padrão residual de todas as variáveis analisadas foi a do modelo de regressão com a variável Q1501 que representa a aprovação do PT no valor de 3.643. Seguida pelo segundo menor valor (3.695) da variável Q18 que representa a auto-atribuição ideológica. O que mostra novamente um melhor desempenho das variáveis políticas para explicar a variavel dependente. 
+  
+### Observando o resultado das regressões, você diria que qual(quais) variáveis possui(em) maior efeito no nota atribuída a Jair Bolsonaro?
+
+  O efeito das variáveis independentes sobre a variável dependente (avaliação de Bolsonaro) pode ser analisado a partir do coeficiente beta que representa o valor da mudança em Y para um aumento unitário em X. Tal valor pode ser negativo (quando a relação é negativa) ou positivo (quando a relação é positiva). Ao verificarmos os valores estimados para cada coeficiente beta, encontramos os maiores valores na variável Q1501 (estimado = -0.411, com erro padrão de 0.020 para mais e para menos) - representando associação negativa com Y; e na variável Q18 (estimado = 0.409, com erro padrão de 0.025 para mais e para menos) - representando associação positiva. Assim, as variáveis políticas tem maior efeito sobre a avaliação de Jair Bolsonaro.
