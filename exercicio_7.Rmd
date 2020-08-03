@@ -1,0 +1,87 @@
+---
+title: "Exercicio 7"
+author: "Alune"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = F, warning = F)
+```
+
+### No exercício anterior foram feitos alguns modelos bivariados. Agora faça uma regressão multivariada mostrando como a nota atribuída a Jair Bolsonaro (variável Q1607) pode ser explicada pelas variáveis idade (D1A_ID), educação (D3_ESCOLA), renda (D9), nota atribuída ao PT (Q1501) e auto-atribuição ideológica (Q18) dos respondentes. Interprete o resultado a partir das informações dadas pelo sumário da regressão.
+
+```{r}
+library(tidyverse)
+library(haven)
+library(ggthemes)
+library(scales)
+
+url <- "https://github.com/MartinsRodrigo/Analise-de-dados/raw/master/04622.sav"
+
+download.file(url, "banco.sav", mode = "wb")
+
+banco <- read_sav("banco.sav")
+
+banco_filtrado <- banco %>%
+  filter(Q1607 <= 10,
+         D9 != 9999998 & 9999999,
+         Q1501 <= 10,
+         Q18 <= 10)
+
+regressao <- lm(Q1607 ~ D1A_ID + D3_ESCOLA + D9 + Q1501 + Q18, data = banco_filtrado)
+
+summary(regressao)
+
+```
+  
+### Em que medida os resultados se mantém ou se alteram quando comparados com os resultados do exercício anterior, quando foram utilizadas apenas regressões bivariadas?
+
+  A regressão multivariada, diferente das regressões feitas no último exercício explica mais sobre a relação entre a variavél dependente e as variáveis independentes. O que se verifica pelo R² que aponta que o modelo explica 28.9% da variável dependente. Enquanto o erro padrão residual, em geral, diminuiu para 3.31. Ao analisar os coeficientes temos valores estimados próximos à zero para mudanças em Y em um acréscimo unitáro em X controlando por todas as variáveis independentes. No entanto, os p-valores se diferenciam para diferentes variáveis independentes. As variáveis que medem ideade e renda dos respondentes apresentam insignificância estatística por apresentarem altos p-valores. As outras variáveis apresentam significância estatística para a relação com a variável dependente.
+
+### A partir da exposição de gráficos e testes, avalie se o modelo se adequa aos pressupostos que uma regressão linear exige.
+
+```{r}
+plot(regressao, 1)
+```
+  Pela análise do gráfico percebemos que a linha vermelha esta bem próxima a linha pontilhada que cruza o eixo y no zero, ou seja, o gráfico não apresenta nenhum padrão, o que indica que o pressuposto da linearidade foi atendido.
+  
+```{r}
+library(lmtest)
+
+bptest(regressao)
+```
+  A homocedasticidade, no entanto, não foi atendida, visto que há um alto BP de 54.963 pois os pontos estão distribuidos ao longo do eixo x para cima e para baixo ao longo do eixo x de forma não ideal.
+
+```{r}
+acf(regressao$residuals)
+```
+  As linhas verticais estão dentro do pontilhado azul, com exceção da primeira linha sendo o resultado ideal, cumprindo com o pressuposto da ausência de autocorrelção de entre casos/resíduos.
+  
+```{r}
+library(MASS)
+plot(regressao, 2)
+sresid <- studres(regressao) 
+shapiro.test(sresid)
+```
+  Sendo a hipótese nula a normalidade dos resíduos e o p-valor de 2.885e-10 se encontrar próximo a zero poderíamos rejeitar a hipótese nula, o que não é ideal.
+
+### Caso algum pressuposto não seja satisfeito, quais são as consequências específicas para o modelo estimado?
+
+  No caso da homocedasticidade não ser atendida, a confiabilidade dos testes de significância e intervalos de confiança é afetada. É necessário assumir a distribuição normal dos resíduos, assim esperamos um alto p-valor para o teste para que não possamos rejeitar a hipótese nula, o que não acontece para o modelo apresentado.
+
+### Considerando o 4o hurdle do livro *Fundamentals...*, faça um modelo de regressão extra adicionando uma variável **numérica** que foi omitida do modelo anterior, mas que possa ter relação causal com a variável dependente (e talvez alguma associação com as independentes anteriores). Justifique a variável extra e analise o resultado. 
+
+```{r}
+banco_filtrado1 <- banco %>%
+  filter (P20 < 2)
+
+regressao <- lm(Q1607 ~ D1A_ID + D3_ESCOLA + D9 + Q1501 + Q18 + P20, data = banco_filtrado)
+
+summary(regressao)
+```
+
+ A variável P20 mede se os respondentes acreditam que a Operação LavaJato combate a corrupção ou não, que pode ser adicionada à regressão visto a opnião positiva do eleitorado do candidato Jair Bolsonaro sobre a Operação LavaJato e o combate à corrupção. 
+ 
+### Compare o resultado obtido com o modelo e conclusões anteriores.
+
+  Com a adição de nova variável independente o R² subiu para 0.2953, que indica que o modelo agora pode explicar por 29,53% da avaliação do candidato Jair Bolsonaro. Enquanto o erro padrão residual diminuiu para 3.303, assim os valores estimados se encontram mais próximos aos valores observados que no modelo anterior. O coeficiente da variável adicionada tem p-valor de significância estatística da relação das variáveis independentes com a variável dependente. 
