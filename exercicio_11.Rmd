@@ -1,0 +1,105 @@
+---
+title: "Exercicio 11"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+
+```{r}
+library(tidyverse)
+library(haven)
+
+link <- "https://github.com/MartinsRodrigo/Analise-de-dados/blob/master/04622.sav?raw=true"
+
+download.file(link, "04622.sav", mode = "wb")
+
+banco <- read_spss("04622.sav") 
+
+banco <- banco %>%
+  mutate(D10 = as_factor(D10)) %>%
+  filter(Q1607 < 11, 
+         Q18 < 11,
+         D9 < 9999998,
+         Q1501 < 11)
+
+
+Outras <- levels(banco$D10)[-c(3,5,13)]
+
+banco <- banco %>%
+  mutate(religiao = case_when(D10 %in% Outras ~ "Outras",
+                              D10 == "Católica" ~ "Católica",
+                              D10 == "Evangélica" ~ "Evangélica",
+                              D10 == "Não tem religião" ~ "Não tem religião"))
+```
+
+### Faça uma regressão linear avaliando em que medida as variáveis independentes utilizadas nos exercícios 7 e 8, idade(D1A_ID), educação (D3_ESCOLA), renda (D9), nota atribuída ao PT (Q1501), auto-atribuição ideológica (Q18), sexo (D2_SEXO) e religião (variável criada no passo anterior) explicam a avaliação de Bolsonaro (Q1607)
+
+```{r}
+regressao <- lm(Q1607 ~ D1A_ID + D3_ESCOLA +  D9 + Q1501 + Q18 + D2_SEXO + religiao, data = banco)
+
+summary(regressao)
+```
+
+### Faça o teste de homoscedasticidade do modelo e corrija as estimações dos coeficientes caso seja necessário.
+
+```{r}
+
+plot(regressao, 3)
+plot(regressao, 1)
+
+library(lmtest)
+
+bptest(regressao)
+
+library(car)
+
+ncvTest(regressao) 
+
+#corrigir
+
+library(sandwich)
+
+coeftest(regressao,
+         vcov = vcovHC (regressao))
+
+```
+
+Os testes formais de homocedasticidade apresentam p-valor alto o que indica a presença de heterocedasticidade. A correção dos coeficientes é feita pela função coeftest.
+
+### Avalie a multicolinearidade entre as variáveis
+
+```{r}
+vif(regressao)
+```
+
+O teste de multicolinearidade mostra que não existe multicolinearidade para as variáveis de idade, escolaridade, renda, avaliação do PT, autoidentificação ideológica, sexo e religião por todos os resultados estarem próximos ao valor de 1. 
+
+### Verifique a presença de outilier ou observações influentes no modelo
+
+```{r}
+plot(regressao, 4)
+plot(regressao, 5)
+
+library(car)
+
+outlierTest(regressao)
+
+```
+
+Os testes e gráficos apontam para não existência de outliers no banco avaliado. Pois nenhuma das observações cruzam a linha vermelha de teste (0.5), assim não é possível dizer que existem observações influentes no modelo.
+
+### Faça a regressao linear sem a observação mais influente e avalie a alteração do resultado
+
+```{r}
+banco <- banco %>%
+  slice(-c(1442))
+
+regressao <- lm(Q1607 ~ D1A_ID + D3_ESCOLA +  D9 + Q1501 + Q18 + D2_SEXO + religiao, data = banco)
+
+summary(regressao)
+```
+
+Em comparação ao modelo da regressão com os outliers, o modelo sem outliers apresenta o mesmo valor de intercepto e significância estatística para todas as variáveis independentes em zero. A variável de idade não teve grande variação, com leve aumento para 1.133e-02, apesar de sua significância estatística ter aumentado (0.069827) ainda não se encontra dentro do parâmetro de 95% de confiança. A variável de escolaridade teve um leve declínio para -1.022e-01 e uma baixa na sua significância estatística (0.023446) que, no entanto, ainda se encontra nos parâmetros de 95%. A variável de renda teve um aumento significante para -6.396e-05 em comparação ao modelo com os outliers (-3.620e-05) e sua significância estatística aumentou consideravelmente (0.037444) passando a cumprir com o parâmetro de 95% aceitáveis à inferência. Quanto à variável de avaliação do PT (-3.975e-01) e autoidentificação ideológica (3.157e-01) houve um tímido aumento e a significância estatística se manteve alta para ambas (< 2e-16). A variável de gênero dos respondentes sofreu um aumento relevante para --7.080e-01 e sua relevância estatística se manteve alta (5.31e-05). Por fim, para variável de religião que tem como categoria de referência os respondentes católicos, a categoria dos evangélicos sofreu um leve aumento para 6.807e-01 bem como em sua significância estatística (0.000613) que permaneceu alta. Para aqueles que não tem religião houve uma queda em sua variação para -6.671e-02 em relação ao valor apresentado no modelo com outliers (-7.565e-02), porém o coeficiente permaneceu sem relevância estatística (0.848065) quando comparados aos católicos. Aqueles que se identificam com outras religiões sofreram uma leve queda em sua variação (-8.193e-01), mas mantiveram sua significância estatística (0.007855) dentro dos parâmetros aceitáveis de 95% em comparação aos católicos. Além disso o R² teve um leve aumento para 0.3037, o que aumenta a qualidade do modelo para explicar a variável dependente. 
