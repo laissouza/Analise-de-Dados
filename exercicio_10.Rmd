@@ -1,0 +1,104 @@
+---
+title: "Exercicio 10"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+### Continuaremos com a utilização dos dados do ESEB2018. Carregue o banco da mesma forma que nos exercicios anteriores
+
+```{r}
+library(tidyverse)
+library(haven)
+
+link <- "https://github.com/MartinsRodrigo/Analise-de-dados/blob/master/04622.sav?raw=true"
+
+download.file(link, "04622.sav", mode = "wb")
+
+banco <- read_spss("04622.sav") 
+
+banco <- banco %>%
+  mutate(D10 = as_factor(D10)) %>%
+  filter(Q18 < 11,
+         D9 < 9999998,
+         Q1501 < 11,
+         Q12P2_B < 3) %>%
+  mutate(Q12P2_B = case_when(Q12P2_B == 1 ~ 0,  # Quem votou em Haddad = 0
+                             Q12P2_B == 2 ~ 1)) # Quem votou em Bolsonaro = 1
+```
+
+### Crie a mesma variável de religião utilizada no exercício anterior
+
+```{r}
+Outras <- levels(banco$D10)[-c(3,5,13)]
+
+banco <- banco %>%
+  mutate(religiao = case_when(D10 %in% Outras ~ "Outras",
+                              D10 == "Católica" ~ "Católica",
+                              D10 == "Evangélica" ~ "Evangélica",
+                              D10 == "Não tem religião" ~ "Não tem religião"))
+
+
+```
+
+### Faça uma regressão linear utilizando as mesmas variáveis do exercício 9 - idade(D1A_ID), educação (D3_ESCOLA), renda (D9), nota atribuída ao PT (Q1501), auto-atribuição ideológica (Q18), sexo (D2_SEXO) e religião (variável criada no passo anterior) - explicam o voto em Bolsonaro (Q12P2_B).
+
+```{r}
+regressao <- lm(Q12P2_B ~ D1A_ID + D3_ESCOLA +  D9 + Q1501 + Q18 + D2_SEXO + religiao, data = banco)
+
+summary (regressao)
+```
+
+### Interprete o resultado dos coeficientes
+
+Para todas as variáveis indepentes em zero temos o valor de 7.067e-01 para a variável dependente indicado pelo intercepto. No que tange a variável idade temos uma variação de 1.140e-03 em Y para um aumento unitário na faixa etária. No entanto, este coeficiente não conta com significância estatística, já que seu p-valor é de 0.13074. No quesito educação temos uma variação de 5.547e-03 para o voto em Bolsonaro, porém mais uma vez esse coeficiente não apresenta significância estatística. O mesmo acontece para a variável de renda que apresenta variação de -9.837e-07 porém sem significância estatística. Passando à variável de avaliação do PT, temos alta significâcia estatística (< 2e-16) de que para um aumento unitário na avaliação deste partido, o voto em Bolsonaro tende a diminuir visto o valor negativo apresentado no coeficiente (-7.728e-02). A variável de atribuição ideológica é outra que apresenta significância estatística para sua variação (< 2e-16). Neste caso cada aumento unitário da variável Q18 indica que o respondente se identifca mais a direita do espectro político, assim o efeito desta variável para o voto em Bolsonaro é positivo (2.651e-02). No que tange o sexo dos respondentes sendo homens indicados como 1 e mulheres indicadas como 2, temos que o aumento unitário, ou seja, ser mulher tem um efeito negativo no voto em Bolsonaro (-5.286e-02) quando comparadas aos homens que terão o mesmo valor de variação porém tal variação será positiva. A significância estatística deste coeficiente é razoável para ser considerado relevante ao modelo. Ao analisar a variável de religião percebe-se que a categoria de referência é a católica. Assim, quando comparados aos católicos somente o grupo dos evangélicos (7.684e-02) e de outras religiões (-7.263e-02) possuem relevância estatística para seu efeito no voto em Bolsonaro. Sendo os evangélicos mais propensos que caólicos à votar em Bolsonaro pelo sinal positivo de seu coeficente, enquanto aqueles que se identificam com outras religiões são menos propensos à votar em Bolsonaro que os católicos devido ao sinal negativo no valor do coeficiente. Aqueles que não possuem religião, apesar de mostar efeito de -2.746e-03 para o voto em Bolsonaro quando comparados à católicos, não possuem significância estatística.
+
+### O resultado difere dos encontrados anteriormente, quando a variavel dependente era a aprovação de Bolsonaro?
+
+Os valores dos coeficientes e das significâncias estatísticas das variáveis independentes analisadas não diferem de forma significante daqueles analisados sobre a avaliação de Bolsonaro.
+
+### Faça uma regressão logistica com as mesmas variaveis
+
+```{r}
+regressao_logistica <- glm(Q12P2_B ~ D1A_ID + D3_ESCOLA +  D9 + Q1501 + Q18 + D2_SEXO + religiao, data = banco, family = "binomial")
+
+summary(regressao_logistica)
+```
+
+### Transforme os coeficientes estimados em probabilidade
+
+```{r}
+
+library(margins)
+
+margins(regressao_logistica)
+
+summary(margins(regressao_logistica))
+```
+
+### Quais foram as diferenças no resultado entre usar a regressão linear e a logistica?
+
+A regressão linear apresenta a variação absoluta na variável dependente para um aumento unitário em cada variável independente. Enquanto a regressão logística apresenta o efeito médio em porcentagem sobre o voto em Bolsonaro para cada aumento unitário na variável independente. Assim, na regressão logística temos que a variável de idade tem um efeito de 0.12% de forma positiva ao voto em Bolsonaro, com significância baixa de 0.113, assim como a significância para esta variável na regressão linear. O mesmo acontece para a variável de escolaridade com significância de 0.1953 e efeito positivo de 0.66%. A variável de sexo que tem por referência as mulheres tem efeito negativo de -5.26% e p-valor aceitável de 0.0091. A variável de renda na regressão logística não apresenta nenhum efeito significante sobre o voto em Bolsonaro por seu valor de coeficiente -0.00% e p-valor 0.8466. Já a avaliação do PT tem efeito negativo de -5.47% sobre o voto em Bolsonaro com p-valor 0.000. A autoidentificação ideológica tem efeito positivo de 2.62% sobre o voto no candidato com significância estatística que se retira do p-valor de 0.0320. Por fim, a variável de religião que tem por referência a categoria dos católicos, verifica-se que ser evangélico tem um efeito positivo de 7.35% sobre o voto no candidato analisado em comparação aos católicos, com significância estatística de 0.0018. Aqueles que não se identificam em nenhuma religião tem efeito negativo de -0.25%, mas tal efeito não tem significância estatística visto o p-valor de 0.9517. Os que se identificam com outras religiões tem efeito negativo de -8.17% no voto no candidato em relação aos católicos, com significância estatística de 0.0310. Assim, em geral os resultados da regressão logística seguem a lógica dos resultados dos coeficientes apresentados na regressão linear. Isto é, as variáveis de idade, escolaridade e renda não tem significância estatística para se fazer inferências sobre as mesmas. Aqueles que não se identificam em nenhuma religião não tem efeito com significância estatística diverso dos católicos. Ser mulher, avaliar melhor o PT e se identificar com outras religiões (quando se compara aos católicos) tem efeito negativo sobre o voto de Bolsonaro, todos esses efeitos contando com relevância estatística. Enquanto, se posicionar mais a direita do espectro político e ser evangélico (quando se compara aos católicos) tem efeito positivo no voto no candidato avaliado e significância estatística.
+
+### Verifique a quantidade de classificações corretas da regressao logistica e avalie o resultado
+
+```{r}
+predicted_prob <- predict(regressao_logistica, type = "response")
+
+library(InformationValue)
+
+1 - misClassError(banco$Q12P2_B, 
+                  predicted_prob, 
+                  threshold = 0.5)
+
+opt_cutoff <- optimalCutoff(banco$Q12P2_B, 
+                            predicted_prob)
+
+1 - misClassError(banco$Q12P2_B, 
+                  predicted_prob, 
+                  threshold = opt_cutoff)
+```
+
+O resultado mostra que a previsão do modelo está de acordo com o resultado das observações no banco de dados em 0.8301, ou seja, 83% das vezes o modelo acerta os resultados. Para otimizar a quantidade de acertos do modelo usamos o opt_cutoff o que aumentou a quantidade de acertos para  0.8362 ou 83.62%.
