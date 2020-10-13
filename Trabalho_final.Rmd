@@ -1,0 +1,638 @@
+---
+title: "Autoritarismo versus Democracia na corrida contra o Covid-19"
+author: "Laís O. Souza (UFPE)"
+date: "11/09/2020"
+output: html_document
+---
+<style>
+body{
+text-align: justify
+}
+</style>
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Resumo
+
+A pandemia do Corona Vírus, por seu modo de contágio, trouxe debates sobre restrições às liberdades nos países afetados em 2020. Este estudo tem por objeto a análise da austeridade de medidas ao combate da pandemia de Covid-19, considerando os regimes políticos dos países do globo. Verificamos que países autoritários tendem a ter níveis de violação à democracia maiores que aqueles países democráticos. Observamos além disso os aspectos ideológicos dos países e a importância do fator econômico para melhor explicar nossa variável dependente. O trabalho está estruturado em quatro partes. Iniciamos com uma breve introdução sobre o contexto no qual pretendemos trabalhar. E então, é feita a apresentação da teoria e as explanações necessárias ao modelo a ser utilizado. Em seguida, verificamos e interpretamos os resultados do modelo de regressão. E, por fim, concluímos com a análise da adequação da teoria com as estimativas do modelo.
+
+Palavras-chave: Covid-19, autocracias, democracias.
+
+
+
+## Introdução
+
+Situações extremas demandam respostas extremas? A pandemia do Covid-19, visto sua forma de contágio, se propagou pelo mundo em questão de meses, alcançando milhões de pessoas e levando centenas de milhares a óbito. Em março de 2020, a Organização Mundial da Saúde declarou oficialmente a contaminação por Covid-19 na categoria de pandemia. Entre as sugestões principais de medidas preventivas estavam: o uso de máscaras, o teste em massa e o isolamento social. Apesar de atualmente mais de duas dezenas de diferentes vacinas estarem em fase de testes, não há previsão imediata para a distribuição e imunização contra o vírus.
+  
+A natureza das medidas preventivas tem cunho de trazer à tona discussões sobre as imposições de restrições sobre os direitos individuais das pessoas. Neste contexto, estudiosos têm apontado que as medidas de isolamento social aumentam o apoio por estilos autocráticos de governo, podendo ameaçar a democracia, bem como o poder coercitivo de governos autocráticos proporcionaria mais assertividade na adoção de medidas como a quarentena (Schwartz 2012, Amat, Arenas, Falcó-Gimeno & Muñoz 2020, Cepaluni, Dorsch & Branyiczki 2020, Flinders 2020). 
+
+Por outro lado, há estudos que discutem que essas mudanças de políticas têm reforçado o apoio por governos e democracia em geral (Blais, Bol, Giani &Loewen 2020, De Vries, Bakker, Hobolt & Arceneaux 2020). Mas há, simultaneamente, estudos que questionam a eficiência dos regimes democráticos para impor as medidas necessárias à contensão da pandemia, devido à preocupação dos atores políticos com a reação da opinião pública em relação à proteção das liberdades civis e seus efeitos sobre as eleições (Lins, R., Rebouças, I., & Domingos, A., 2020; CEPALUNI, 2020).
+  
+A apreensão sobre os efeitos do combate ao vírus, englobavam não só um praticamente certo colapso dos sistemas de saúde, mas inclusive uma crise econômica de proporções históricas. O cenário, portanto, foi utilizado por chefes de governos, como dos Estados Unidos e Brasil, como justificativa para postergar a tomada de medidas preventivas contra a entrada e contágio em massa em seus respectivos territórios (MENDONÇA, 2020). 
+  
+As diversas incertezas sobre o novo vírus propiciaram outro tipo de pandemia, a infodemia¹. O mundo virtual experimenta uma nova onda de fake news sobre a doença e como combatê-la, além de alegações que minimizam a crise sanitária que estamos passando; e forjam teorias da conspiração traçando cenários falsos e incompletos no intuito de culpabilizar um ou outro ator (FLINDERS, 2020). Acentuam-se, portanto, as questões de credibilidade da classe política e midiática por parte dos cidadãos aprofundando e intensificando a polarização já crescente nos últimos anos. Esses fatores trouxeram impactos para as ações das elites políticas e para o engajamento da sociedade civil na promoção das medidas contra o Covid-19. 
+
+Dado aos diversos fatores envolvidos na conjuntura atual, buscamos traçar exame empírico sobre os impactos de características gerais de regimes políticos sobre a austeridade de medidas adotadas contra a pandemia. O objetivo se configura em entender se os regimes autoritários irão tender a efetivar medidas que violam direitos individuais e coletivos, tomando o combate à pandemia como justificativa. Em contrapartida, analisamos se existe uma tendência oposta para regimes democráticos. 
+	
+Consideramos inclusive como violação anti-democrática as práticas desinformacionais, que no contexto de crise global configuram lesão ao direito coletivo de informação. Assim, inovamos na abordagem da variável dependente quando abrangemos o fator da desinformação no rol de violações anti-democráticas. Aprofundamos ainda mais o debate, para trazer o caráter ideológico dos países e avaliar se existem padrões tendentes a afetar a responsividade à pandemia. Para tanto, utilizaremos do modelo de Regressão Multivariada, com a finalidade de avaliar os efeitos de variáveis independentes sobre nossa variável dependente. A seguir apresentamos as informações detalhadas dos dados, e os resultados obtidos das estimativas do modelo. Em anexo disponibilizamos o código completo com agregação, manipulação e comandos na finalidade de habilitar a replicação do presente modelo aos interessados.
+
+
+## 1.	TEORIA E OPERACIONALIZAÇÃO:
+
+  O direcionamento do presente estudo está estruturado a partir da teoria de que países que tem como característica governos autoritários irão tender a aumentar a implementação de medidas mais severas com violência policial e envolvimento do exército, em relação à contenção da pandemia em seus respectivos territórios, tendendo ainda a contribuir com a desinformação - ocultamento de dados sobre casos de Covid-19, censura à notícias relacionadas -. A operacionalização, portanto, constitui relação positiva entre a variável independente e a variável dependente. Por outro lado, esperamos o inverso dos regimes tipicamente democráticos, ou seja, uma relação negativa na qual os regimes democráticos tenderão a ter níveis mais baixos em relação às violações à democracia.
+
+
+
+
+Variável Independente --------------------(relação causal)-----------------> Variável Dependente
+
+
+
+(Operacionalização: Regressão Multivariada)                                                                                                              
+
+
+Regimes Políticos Autocráticos ------------(tendem a aumentar)-----------------> Violações à Democracia (Covid-19)
+
+
+
+
+  O modelo de regressão linear a ser utilizado é o da regressão multivariada no qual performamos o controle estatístico analisando associações, enquanto mantemos os valores das variáveis de controle essencialmente constantes. Este controle estatístico promove robustez aos resultados por incluir variáveis independentes que auxiliam na explicação da variável dependente. Este modelo de análise é largamente utilizado para se estudar os efeitos da variável responsiva. Portanto, para demonstrar uma relação causal, devemos mostrar a associação entre as variáveis, garantir a ordem temporal apropriada e eliminar explicações alternativas para a associação.
+
+  Esta forma de controle auxilia na detecção de: i) relações espúrias, quando uma variável Z afeta ambos X e Y em conjunto; ii) relações em corrente, na qual Z é variável interveniente, assim X afeta Y indiretamente por seus efeitos em Z; iii) variáveis supressoras, na qual a associação de X e Y se apresenta somente após controlar por Z; iv) interação estatística, na qual o efeito de X em Y varia de acordo com o valor de Z. Para tanto, as variáveis a serem incorporadas no modelo de regressão múltipla devem preencher certos requisitos matemáticos, para que os resultados sejam confiáveis. 
+
+  A estes requisitos atribuímos o termo pressupostos da regressão, quais sejam:
+  
+i) Linearidade dos parâmetros, isto é, deve ser possível representar a relação entre as variáveis por uma função linear. 
+
+ii)	A mensuração das variáveis deve ser adequada, não havendo erro sistemático nas medidas, caso contrário as estimativas serão enviesadas.
+
+iii) A estimativa da média do termo de erro deve ser igual à zero, o que significa que os fatores não incluídos no modelo que compõem o termo de erro não afetam sistematicamente o valor médio de Y (quando pontos positivos e negativos se anulam por serem equidistantes). A violação deste pressuposto compromete a consistência da estimativa do intercepto.
+
+iv)	Homocedasticidade, quando se verifica a constância da variância do termo de erro para os diferentes valores da variável independente.
+
+v) Ausência de autocorrelação, ou seja, os termos de erros devem ser independentes entre si.
+
+vi) A variável independente não deve ser correlacionada com o termo de erro.
+
+vii) Nenhuma variável teoricamente relevante para explicar a variável dependente deve ser excluída do modelo e nenhuma variável irrelevante nos mesmos termos deve ser incluída no modelo, o que produziria ineficiência nos estimadores, aumentando o erro padrão da estimativa.
+
+viii)	As variáveis independentes não devem apresentar alta correlação, ao que se determina como não-multicolinearidade. Sua violação pode resultar em aumento da magnitude da variância dos parâmetros estimados.
+
+ix)	O termo de erro é assumido com distribuição normal.
+
+x) O número de casos deve exceder a quantidade de parâmetros estimados.
+
+  Mais a frente ao passarmos à análise e interpretação dos resultados voltaremos ao ponto dos pressupostos empiricamente testáveis e as consequências de suas violações para o modelo estatístico, apresentando os testes adequados e respectivas correções quando necessárias.
+
+  A operacionalização da presente teoria se dará através da aplicação simultânea de informações retiradas de diversos bancos de dados. O primeiro deles, é o banco Varieties of Democracy (V-dem) que agrega os dados que seguem a conceituação de intelectuais consolidados no campo da Ciência Política e campos correlatos as informações pretendidas, prezando pela interdisciplinaridade. Analisaremos 139 países do mundo, sendo a amostra satisfatória, visto a proximidade com a população – 193 países reconhecidos pela ONU³ - promovendo melhor qualidade preditiva ao modelo. As variáveis incluídas contam com as características dos governos dos países para o ano de 2019, buscando interpretar os efeitos destes regimes na adoção de medidas austeras que violam a democracia a partir de dados sobre tais medidas até o mês de setembro de 2020. Nossa variável de controle que contabiliza a taxa de incidência do vírus e a taxa de fatalidade serão também contabilizados até setembro de 2020. Outra variável independente a ser utilizada é o rendimento nacional bruto per capta de cada país para o ano de 2018, englobando o contexto econômico dos países da amostra.
+
+  
+```{r, echo = FALSE, warning = F, message = F}
+library(tidyverse)
+library(readxl)
+library(haven)
+library(ggthemes)
+
+########## ORGANIZAR BANCOS ####################################################
+
+setwd("C:/Users/Laís Oliveira/Documents/Mestrado UFPE/Análise de Dados")
+
+##Banco de dados com número de casos e mortes por Covid-19
+
+url1 <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/09-03-2020.csv"
+
+download.file(url1, "csse_covid_19_data.csv", mode = "wb")
+banco0 <- read.csv("csse_covid_19_data.csv")
+
+banco0 <- banco0 %>%
+  select(Country_Region, Confirmed, Deaths, Incidence_Rate)%>%
+  filter(Country_Region != "Diamond Princess",
+         Country_Region != "MS Zaandam",
+         Country_Region != "Kosovo",
+         Country_Region != "West Bank and Gaza")%>%
+  mutate(Country_Region = recode(Country_Region,
+                                 "Burma" = "Burma/Myanmar",
+                                 "Czechia" = "Czech Republic",
+                                 "Congo (Brazzaville)" = "Republic of the Congo",
+                                 "Congo (Kinshasa)" = "Democratic Republic of the Congo",
+                                 "US" = "United States of America",
+                                 "Korea, South" = "South Korea",
+                                 "Cote d'Ivoire" = "Ivory Coast",
+                                 "Gambia" = "The Gambia",
+                                 "Taiwan*" = "Taiwan")) %>%
+  group_by(Country_Region) %>%
+  summarise(Confirmed = sum(Confirmed),
+            Deaths = sum(Deaths)) %>%
+  mutate(Fatality.Ratio = Deaths/Confirmed)
+
+#Banco com número de habitantes de cada país
+
+#Incidence-Rate = n_casos/(população/100.000)
+
+library(xml2)
+library(rvest)
+
+site <- "https://www.worldometers.info/world-population/population-by-country" %>%
+  read_html() %>%
+  html_table(fill = TRUE) %>%
+  as.data.frame() %>%
+  mutate(Population..2020. = str_replace_all(Population..2020., ",", "")) %>%
+  mutate(Population..2020. = as.numeric(Population..2020.)) %>%
+  select(Population..2020., Country..or.dependency.) %>%
+  arrange(Country..or.dependency.) %>%
+  mutate(Country..or.dependency. = recode(Country..or.dependency.,
+                                         "Myanmar" = "Burma/Myanmar",
+                                         "Czech Republic (Czechia)" = "Czech Republic",
+                                         "Côte d'Ivoire" = "Ivory Coast",
+                                         "Congo" = "Republic of the Congo",
+                                         "DR Congo" = "Democratic Republic of the Congo",
+                                         "Saint Kitts & Nevis" = "Saint Kitts and Nevis",
+                                         "Sao Tome & Principe" = "Sao Tome and Principe",
+                                         "St. Vincent & Grenadines" = "Saint Vincent and the Grenadines",
+                                         "Gambia" = "The Gambia",
+                                         "United States" = "United States of America",
+                                         ))
+
+banco0 <- left_join(banco0, site,
+                    by = c("Country_Region" = "Country..or.dependency."))
+banco0 <- banco0 %>%
+  mutate(Incidence_Rate = Confirmed/(Population..2020./100000))
+
+#Último update: Setembro/2020
+#Incidence_Rate: casos por 100.000 pessoas
+#CaseFatality_Rate: Número informado de mortes/Número de casos
+
+
+##Banco de dados pandemia e violações à democracia
+
+url <- "https://raw.githubusercontent.com/vdeminstitute/pandem/master/csv_files/PanDem_V4.csv"
+
+download.file(url, "pandem.csv", mode = "wb")
+
+banco1 <- read_csv("pandem.csv")
+
+banco1 <- banco1 %>%
+  select(pandem, panback, country_name, timeperiod) %>%
+  filter(timeperiod == "Mar-Sep")
+
+##Banco de dados de democracia
+
+banco2 <- readRDS("Country_Year_V-Dem_Full+others_R_v10\\V-Dem-CY-Full+Others-v10.rds")
+
+banco2 <- banco2 %>%
+  filter(year == 2019,
+         country_name != "North Korea",
+         country_name != "Turkmenistan") %>%
+  select (country_name, year, Regime = v2x_regime, 
+          Nacionalista = v2exl_legitideolcr_0, 
+          Socialista_Comunista = v2exl_legitideolcr_1, 
+          Restaurativo_Conservador = v2exl_legitideolcr_2,  
+          Separatista_Autonomista = v2exl_legitideolcr_3, 
+          Religioso = v2exl_legitideolcr_4)%>%
+  mutate(Regime = case_when (Regime < 2 ~ "Autocracia",
+                             Regime >= 2 ~ "Democracia"))
+
+##### Banco de dados sobre economia dos países #################################
+
+#GNIpercap: Rendimento Bruto Nacional per capta
+
+banco3 <- read_excel("Gross national income (GNI) per capita (2011 PPP $).xlsx")
+
+banco3 <- banco3 %>%
+  select("2018", Country) %>%
+  rename(GNIpercap = "2018") %>%
+  mutate (GNIpercap = as.numeric(GNIpercap)) %>%
+  mutate(GNIpercap = GNIpercap/1000)%>%
+  mutate(Country = recode(Country,
+                          "Bolivia (Plurinational State of)" = "Bolivia",
+                          "Myanmar" = "Burma/Myanmar",
+                          "Czechia" = "Czech Republic",
+                          "Congo" = "Republic of the Congo",
+                          "Congo (Democratic Republic of the)" = "Democratic Republic of the Congo",
+                          "Iran (Islamic Republic of)" = "Iran",
+                          "Côte d'Ivoire" = "Ivory Coast",
+                          "Lao People's Democratic Republic" = "Laos",
+                          "Moldova (Republic of)" = "Moldova",
+                          "Korea (Republic of)" = "South Korea",
+                          "Russian Federation" = "Russia",
+                          "Tanzania (United Republic of)" = "Tanzania",
+                          "United States" = "United States of America",
+                          "Venezuela (Bolivarian Republic of)" = "Venezuela",
+                          "Viet Nam" = "Vietnam",
+                          "Syrian Arab Republic" = "Syria",
+                          "Gambia" = "The Gambia"))
+
+### Agregando os bancos de dados ###############################################
+
+banco <- left_join(banco1, banco2,
+                   by = c("country_name" = "country_name"))
+
+data0 <- left_join(banco, banco0,
+                   by = c("country_name" = "Country_Region"))
+
+data <- left_join(data0, banco3,
+                  by = c("country_name" = "Country"))
+data <- data %>%
+  filter(country_name != "North Korea",
+         country_name != "Turkmenistan",
+         country_name != "Hong Kong",
+         country_name != "Somalia",
+         country_name != "Taiwan")
+
+regressao <- lm(pandem ~ Regime + Nacionalista + Socialista_Comunista + Restaurativo_Conservador + Separatista_Autonomista + Religioso + GNIpercap + Incidence_Rate + Fatality.Ratio, data = data)
+```
+
+
+## 1.1 Variável Dependente
+
+  Utilizaremos a variável dependente através do índice de violação à democracia e desinformação. Neste consta o índice de desinformação do banco de V-dem, que agrega dados sobre limitações à mídia e às reportagens sobre o Covid-19 e respostas de governo à pandemia; limitação do acesso à informação; censura imposta pelos governos; o assédio verbal e físico à jornalistas e desinformação por parte dos governos. O índice de violações à democracia inclui ainda a violência física por parte de policiais e militares e o envolvimento de militares no combate ao Covid-19. Assim, a variável numérica pandem, apresenta escala contínua de 0 a 1, ou seja, de baixo nível de violações à alto nível de violações. A representação gráfica desta variável indica baixos níveis de violação democrática entre os países em geral, alcançando o máximo de 0.6 na escala.  
+
+```{r, fig.align='center'}
+ggplot(data, aes(pandem)) +
+  geom_histogram() +
+  geom_density() +
+  theme_minimal() +
+  labs(title = "Variável Dependente: Violações à democracia e desinformação na pandemia",
+       subtitle = "Gráfico de curva de densidade e histograma",
+       x = "Violção democrática e desinformação na pandemia",
+       y = "Número de Países",
+       caption = "Elaboração própria a partir do banco V-Dem")
+
+data %>%
+  group_by(Regime) %>%
+  filter(!is.na(Regime),
+         !is.na(pandem)) %>%
+  summarise(mediana = median(pandem),
+            media = mean(pandem),
+            desvio = sd(pandem),
+            n = n())
+
+t.test(pandem ~ Regime, data = data)
+```
+
+  Buscando verificar se nossa teoria está no caminho certo, testamos nossa hipótese de que países com regimes políticos autoritários irão tender a violar mais a democracia. Para tanto, utilizamos o teste t que analisa a correlação entre uma variável categórica, no caso o regime político, e uma variável numérica, neste caso o nível de violação à democracia. Os resultados do teste apontam para existência de correlação entre as variáveis, uma vez que ao observarmos o intervalo de confiança nele não está contido o valor de zero. Com o p-valor de 1.508e-07 temos alta confiança na significância estatística deste resultado.  
+
+## 1.2 Variáveis Independentes
+
+  A principal variável independente do modelo é o regime político que considera o conceito de Robert Dahl para indicar, de acordo com os requisitos institucionais (DAHL, 2020), qual o tipo de governo do país em questão, desde uma autocracia fechada à democracia liberal. Originalmente a variável distribuía as observações em quatro categorias: i) autocracia fechada; ii) autocracia eleitoral; iii) democracia eleitoral e; iv) democracia liberal. Por motivos de parcimônia, transformamos a variável para conter somente duas categorias atribuindo o termo “Autocracias” (tanto fechadas como eleitorais) e  “Democracias” (tanto liberais como eleitorais), pois o enfoque do presente estudo está em considerar os regimes políticos em geral, atentando para os efeitos de características ideológicas para níveis de violações à democracia. A representação gráfica abaixo apresenta a contagem desses regimes na amostra, indicando distribuição equilibrada entre as categorias dos países analisados. Como vimos acima o teste de hipótese para esta variável aponta para existência de correlação entre as variáveis principais.
+  
+```{r, fig.align='center'}
+ggplot(data, aes(Regime)) +
+  geom_bar() +
+  theme_minimal() +
+  labs(title = "Variável Independente: Regimes Políticos",
+       subtitle = "Gráfico de barras",
+       x = "Regime",
+       y = "Número de países",
+       caption = "Elaboração própria a partir do banco V-Dem")
+```
+
+  No intuito de aprofundar a caracterização dos regimes e seus efeitos sobre a violação antidemocrática no combate ao Covid-19, utilizamos variáveis de classificação ideológica dos regimes, como nacionalistas, socialistas ou comunistas, conservadores, separatistas e religiosos contidas no banco V-dem. As variáveis independentes aqui mencionadas avaliam o caráter ideológico a partir de uma escala que varia de 0 a 1, dos governos que promovem abertamente determinada posição ideológica. A seguir apresentamos a representação gráfica para cada variável ideológica em relação aos regimes políticos estudados.
+
+  A variável que classifica o nível de nacionalismo do país apresenta correlação de 0.2940535 com a variável de violações à democracia, resultado com alto nível de confiança por seu p-valor de 0.0004426. Esta relação positiva indica uma tendência por mais medidas que violam à democracia em países que promovem abertamente o nacionalismo, o que será melhor observado mais a frente quando verificarmos os coeficientes do modelo de regressão. Pela representação gráfica da variável, observamos que entre os países nacionalistas os regimes de maior pontuação são os autoritários, no entanto, há considerável montante de regimes democráticos que se caracterizam como nacionalistas.
+
+```{r, fig.align='center'}
+ggplot(data, aes(Regime, Nacionalista)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Variáveis Ideológicas: Regime x Nacionalista",
+       subtitle = "Boxplot",
+       x = "Regime",
+       y = "Nível de Nacionalismo",
+       caption = "Elaboração própria a partir do banco V-Dem")
+
+cor.test(data$Nacionalista, data$pandem)
+```
+
+  Quanto a variável de classificação de países abertamente comunistas ou socialistas o teste de hipótese aponta pela inexistência de correlação com nossa variável dependente, uma vez que o intervalo de confiança abrange o valor de zero e o p-valor excessivamente alto não permite inferir sobre o resultado de -0.04020145 da correlação. Decidimos por manter esta variável no modelo por motivos de comparação com as outras variáveis ideológicas. Ambos os regimes apresentados no gráfico tem baixa pontuação na escala que concerne socialistas e comunistas, no entanto a média das observações é maior entre as democracias.
+  
+```{r, fig.align='center'}
+ggplot(data, aes(Regime, Socialista_Comunista)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Variáveis Ideológicas: Regime x Socialista ou Comunista",
+       subtitle = "Boxplot",
+       x = "Regime",
+       y = "Nível de Socialismo ou Comunismo",
+       caption = "Elaboração própria a partir do banco V-Dem")
+
+cor.test(data$Socialista_Comunista, data$pandem)
+```
+
+  A variável de classificação de países separatistas ou autonomistas, como acima, apesar de apresentar correlação de -0.1222418 o intervalo de confiança compreende o valor de zero, indicando inexistência de correlação, e o p-valor de 0.1517 aponta a insignificância estatística dos resultados. Verifica-se pelo gráfico que a caracterização separatista ou autonomista é pontual para observações em ambos os regimes políticos analisados. 
+  
+```{r, fig.align='center'}
+ggplot(data, aes(Regime, Separatista_Autonomista)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Variáveis Ideológicas: Regime x Separatista ou Autonomista",
+       subtitle = "Boxplot",
+       x = "Regime",
+       y = "Nível de Separatismo ou Autonomismo",
+       caption = "Elaboração própria a partir do banco V-Dem")
+
+cor.test(data$Separatista_Autonomista, data$pandem)
+```
+
+  Em relação aos países abertamente conservadores ou restaurativos os testes de hipótese apresentam correlação de -0.170079, comprovada pelo intervalo de confiança e o p-valor de 0.04532 proporciona alto nível de confiança. Indicando uma tendência de relação negativa para com a variável dependente. Entre as democracias há maior nível de ideologia conservadora quando comparadas às autocracias, sendo sua média o ponto máximo para regimes autoritários.
+
+```{r, fig.align='center'}
+ggplot(data, aes(Regime, Restaurativo_Conservador)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Variáveis Ideológicas: Regime x Restaurativo ou Conservador",
+       subtitle = "Boxplot",
+       x = "Regime",
+       y = "Nível de Separatismo ou Conservadorismo",
+       caption = "Elaboração própria a partir do banco V-Dem")
+
+cor.test(data$Restaurativo_Conservador, data$pandem)
+```
+
+  Encerrando as variáveis ideológicas, os países religiosos contam com correlação positiva de 0.3274712 com a variável dependente. O intervalo de confiança aponta para confirmação da correlação entre as variáveis e o p-valor de 8.319e-05 indica alta confiança dos resultados. Entre as autocracias estão os maiores níveis de ideologia religiosa, enquanto as democracias possuem baixos níveis para esta característica.
+  
+```{r, fig.align='center'}
+ggplot(data, aes(Regime, Religioso)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Variáveis Ideológicas: Regime x Religioso",
+       subtitle = "Boxplot",
+       x = "Regime",
+       y = "Nível de Religião",
+       caption = "Elaboração própria a partir do banco V-Dem")
+
+cor.test(data$Religioso, data$pandem)
+```
+
+  Outras variáveis independentes que utilizaremos para robustez do modelo são a incidência de casos confirmados e a taxa de fatalidade por corona vírus para a população de cada país analisado. A vaiável contínua (Incidence_Rate) que indica a taxa de incidência de casos confirmados foi selecionada do banco de dados COVID-19 Data Repository by the Center for Systems Science and Engineering (CSSE) at Jhons Hopkins University. Este banco conta com dados de diversas fontes incluindo da Organização Mundial da Saúde (OMS) com atualizações diárias. A taxa de fatalidade é representada pela variável contínua (Fatality.Ratio) que foi calculada da divisão do número de casos confirmados (CSSE) pelo número de habitantes por país ² dividido por 100.000 pessoas. Enquanto a taxa de incidência é calculada pela divisão do número informado de mortes pelo número de casos confirmados por país. 
+
+```{r, fig.align='center'}
+ggplot(data, aes(Incidence_Rate)) +
+  geom_density() +
+  theme_minimal() +
+  labs(title = "Variáveis Independentes: Taxa de Incidência",
+       subtitle = "Gráfico de Densidade",
+       x = "Taxa de Incidência",
+       y = "Densidade",
+       caption = "Elaboração própria a partir do banco CSSE")
+
+ggplot(data,aes(Fatality.Ratio)) +
+  geom_density() +
+  theme_minimal() +
+  labs(title = "Variáveis Independentes: Taxa de Fatalidade",
+       subtitle = "Gráfico de Densidade",
+       x = "Taxa de Fatalidade",
+       y = "Densidade",
+       caption = "Elaboração própria a partir do banco CSSE")
+```
+
+  Os testes de hipótese que rodamos para as variáveis acima apontam para a existência de correlação da taxa de fatalidade (-0.2085685) com alto nível de confiança. No entanto, o mesmo não ocorre para a variável de taxa de incidência, onde o intervalo de confiança por conter o valor de zero indica a inexistência de correlação com a variável dependente.
+
+```{r}
+cor.test(data$Incidence_Rate, data$pandem)
+
+cor.test(data$Fatality.Ratio, data$pandem)
+```
+
+  Por fim, incluímos a variável numérica da qual consta o rendimento nacional bruto per capta de cada país para o ano de 2018, retirado do banco de dados do Human Development Report da United Nations Development Programme. Entendemos relevante controlar pelo estado econômico dos países, devido as previsões de crise econômica de grandes proporções, o que tem cunho de afetar as decisões sobre prevenção e contenção à pandemia. Apresentamos a seguir a variância deste quesito em relação a autocracias e democracias. O gráfico de densidade aponta para tendência de poucos países autocráticos se encontrarem com maiores níveis de rendimento bruto per capta, enquanto um maior número de países democráticos estarem com níveis balanceados deste quesito. 
+
+```{r, fig.align='center'}
+ggplot(data, aes(GNIpercap, fill = Regime)) +
+  geom_density(alpha = 0.3) +
+  theme_minimal() +
+  labs(title = "Variáveis Independentes: Regime x GNIpercap",
+       subtitle = "Gráfico de Densidade",
+       x = "Regime",
+       y = "GNI per capta",
+       caption = "Elaboração própria a partir do banco V-Dem")
+
+cor.test(data$pandem, data$GNIpercap)
+```
+
+  O teste de hipótese para a variável econômica acima representada indica correlação negativa de -0.3324221, confirmada por seu intervalo de confiança e alto nível de confiança, visto seu p-valor de 6.385e-05. Sendo possível concluir que países com maior rendimento bruto nacional per capta irão tender à menores níveis de violações à democracia. 
+  
+  A seguir analisaremos a adequação dos pressupostos  e qualidade do modelo da regressão multivariada, interpretando os efeitos estimados de cada variável independente relevante à explicação dos níveis de violação à democracia no cenário pandêmico atual. E então, incluímos a relação de interação entre os aspectos de regime político e econômico  dos países envolvidos no presente modelo estatístico.
+  
+
+## 2.	 REGRESSÃO MULTIVARIADA
+
+  Na presente seção discutiremos os resultados apresentados no modelo, iniciando pela verificação dos pressupostos a serem a atendidos pelo modelo, seguindo então para a interpretação dos coeficientes da regressão multivariada e adicionando ao final uma interação ao modelo com a finalidade de comparar os resultados.
+
+## 2.1	PRESSUPOSTOS
+
+## 2.1.1 Linearidade
+
+  A linearidade dos parâmetros é o pressuposto de que a relação entre as variáveis independentes e a variável dependente pode ser representada por uma função linear. A violação deste pressuposto impede que a estimação pelo modelo produza o melhor estimador linear não-enviesado, ou seja, a diferença entre os parâmetros estimados e os observados cresce. O teste que utilizamos para verificar a linearidade de nossos parâmetros foi o gráfico 1 da função plot(). Idealmente, o gráfico reproduzido não apresenta nenhum padrão, sendo a linha vermelha horizontal próxima a linha pontilhada que cruza o eixo y no valor 0. O resultado de nosso modelo, representado abaixo, cumpre de forma razoável o pressuposto da linearidade, pois a linha vermelha se mantém próxima à linha de referência, divergindo discretamente ao final. 
+
+```{r, fig.align='center'}
+plot(regressao, 1)
+```
+
+## 2.1.2. Homocedasticidade
+
+  A homocedasticidade do modelo significa que a variância do termo de erro é constante para os diferentes valores da variável independente, assim os resíduos variam uniformemente. Contrariamente, a heterocedasticidade ocorre quando, à medida que o valor de Y aumenta, os erros de predição também aumentam, apresentando variância diferente. A violação deste pressuposto é preocupante, pois afeta a confiabilidade dos testes de significância e intervalos de confiança. No intuito de verificar a presença de heterocedaticidade, rodamos os testes com os gráficos 1 e 3 da função plot(), porém desta vez atentamos à distribuição dos pontos ao longo de todo eixo X, que deve ser uniforme em todas as direções. Os resultados que obtivemos apresentaram boa distribuição de pontos, no entanto, a confirmação da homocedasticidade ainda é inconclusiva.
+  
+  Passamos então aos testes formais para verificar este pressuposto: o bptest e o ncvTest. A hipótese nula destes testes é a presença de homocedasticidade, dessa forma o resultado esperado é o de um p-valor alto, quando não podemos rejeitar a hipótese nula. Ao rodarmos estes testes encontramos baixos valores para o p-valor (0.002 para o bptest e 0.0005 para o ncvTest), o que aponta para a rejeição da hipótese nula e, portanto, a presença de heterocedasticidade.
+  
+A resolução do problema da heterocedasticidade pode ser feita a partir da correção dos coeficientes da regressão, que vão então atender ao pressuposto da homocedasticidade. Tal correção é feita rodando a função coeftest(), na qual o resultado apresentado indicará os coeficientes a serem interpretados do modelo de regressão.
+
+```{r, fig.align='center'}
+plot(regressao, 1)
+plot(regressao, 3)
+
+library(lmtest)
+bptest(regressao)
+
+library(car)
+ncvTest(regressao) 
+
+library(sandwich)
+coeftest(regressao,
+         vcov = vcovHC (regressao))
+```
+
+## 2.1.3 Autocorrelação entre os casos e os resíduos
+
+  Outro pressuposto a ser atendido no modelo de regressão multivariada é a ausência de autocorrelação, isto é, os termos de erros devem ser independentes entre si. Essa é a situação em que o valor de uma observação medida em determinado período (t) não influencia no valor de uma observação medida em um momento posterior (t.). A violação deste pressuposto pode gerar problemas de enviesamento e confiabilidade dos testes de significância e intervalos de confiança. Para testar a autocorrelação, rodamos a função acf() para os resíduos de nossa regressão. O resultado será o gráfico em que as linhas dos resíduos não ultrapassem o intervalo delimitado pelas linhas azuis, com exceção da primeira linha vertical. O resultado de nosso teste aponta para a ausência de autocorrelação, atendendo o pressuposto.  
+  
+```{r, fig.align='center'}
+acf(regressao$residuals)
+```
+
+## 2.1.4 Normalidade dos Resíduos
+
+  A normalidade dos resíduos, como o próprio nome indica, é o pressuposto de que os resíduos (U) estão distribuídos de forma normal. Ao testarmos a ocorrência deste pressuposto, rodamos o gráfico 2 da função plot(), e atentamos à proximidade dos pontos à linha diagonal. Nossos resultados mostram que a normalidade dos resíduos foi satisfatoriamente atendida. Com fim de reforçar tal conclusão, fizemos o teste formal, Shapiro.test (), no qual a hipótese nula é a normalidade dos resíduos, assim esperamos um alto p-valor, quando não podemos rejeitar esta hipótese. Nosso modelo, apresentou p-valor de 0.2025 para o teste de Shapiro, concluindo pelo atendimento ao pressuposto. 
+
+```{r, fig.align='center'}
+plot(regressao, 2)
+
+library(MASS)
+sresid <- studres(regressao) 
+shapiro.test(sresid)
+```
+
+## 2.1.5 Multicolinearidade 
+
+  A multicolinearidade das variáveis é resultado não desejado do pressuposto. Assim, a não multicolinearidade é atendida quando as variáveis independentes não apresentam alta correlação entre si. A maior dificuldade dos modelos com problemas de multicolinearidade é o aumento da magnitude da variância dos parâmetros estimados. A verificação da presença de multicolinearidade pode se dar pelo teste através da função vif(), no qual o resultado esperado está próximo ao valor de 1 para todas variáveis independentes envolvidas no modelo. O modelo que apresentamos cumpre com este pressuposto, pois se aproxima de 1 em todas variáveis independentes analisadas. 
+
+```{r}
+vif(regressao)
+```
+
+## 2.1.6 Outliers
+
+  Os outliers são as observações discrepantes dos dados em geral, que tem o potencial de influenciar os resultados das regressões lineares, tornando-os enviesados. Portanto, ao fazer a verificação da presença de outliers na amostra e concluindo por sua existência, deve-se considerar a retirada desses valores da amostra para resguardar a confiabilidade dos resultados. Verificamos a existência de outliers através da observação dos gráficos 4 e 5 da função plot() que irá demonstrar as variáveis e suas respectivas Cook’s distance que representa a medida de influência de tais observações no resultado da regressão. Apesar de nossos testes apresentarem os três maiores valores, não podemos concluir por sua influência discrepante no modelo, pois estes não cruzam a linha de referência (pontilhada em vermelho no quadrante 0.5). Desejando reforçar a afirmação acima, rodamos ainda o teste formal outlierTest(), no qual a hipótese nula é que a observação não é outlier, assim caso apresente alto p-valor não podemos confirmar que a observação não é influente. Por fim, não encontramos indícios de observações outliers. 
+ 
+```{r, fig.align='center'} 
+plot(regressao, 4)
+plot(regressao, 5)
+
+outlierTest(regressao)
+```
+
+  Feita a verificação dos pressupostos da regressão e os devidos ajustes dos coeficientes o modelo está apto a ser analisado e interpretado segundo as estimativas e referências. Passemos, portanto, à avaliação que o modelo de regressão multivariada apresenta sobre os efeitos que podem explicar a variação da variável dependente do presente estudo.
+  
+## 2.2 RESULTADOS DA REGRESSÃO MULTIVARIADA  
+
+  Ao adentrarmos a interpretação do modelo estatístico consideramos primeiramente as variáveis de interesse e controle isoladamente analisando a qualidade da regressão. Ao fim desta seção consideramos o modelo inserindo uma interação entre duas variáveis pertinentes ao modelo.
+
+```{r}
+regressao <- lm(pandem ~ Regime + Nacionalista + Socialista_Comunista + Restaurativo_Conservador + Separatista_Autonomista + Religioso + GNIpercap + Incidence_Rate + Fatality.Ratio, data = data)
+
+summary(regressao)
+confint(regressao, level = 0.95)
+
+library(sandwich)
+coeftest(regressao,
+         vcov = vcovHC (regressao))
+```
+
+  Iniciamos a análise dos coeficientes com o intercepto (alfa), que seria o valor que se encontra no eixo y, quando todas as variáveis independentes têm valor zero. Em nosso modelo, o alfa é de 1.8059e-01. Com erro padrão de 5.2839e-02, que seria a medida que determina o intervalo de confiança, assim este valor para mais e para menos do intercepto representa o intervalo de confiança para este coeficiente. O p-valor do alfa é de 0.0008454***, sendo aceitável por estar dentro do parâmetro acadêmico para estimativas de 95% de confiança. 
+
+  Seguindo para as variáveis independentes do modelo, o coeficiente que representa o regime político dos países tem como categoria de referência regimes autocráticos.  Portanto, -7.0752e-02 será o valor do efeito em nossa variável dependente, qual seja a violação à democracia e nível de desinformação, para regimes democráticos. Assim, podemos inferir que regimes democráticos terão um efeito negativo sobre tais violações, enquanto regimes autocráticos têm efeito positivo oposto, ou seja, 7.0752e-02 a mais no nível de violação. O erro padrão de 2.5119e-02 é adicionado e subtraído do valor do coeficiente para estimar o intervalo de confiança para esta variável independente. Temos alto nível de confiança sobre estes resultados, representado pelo p-valor de 0.0056150**, o que aponta para a significância estatística destes resultados.
+
+  Adentrando às características ideológicas dos regimes políticos, por termos utilizado uma variável independente para cada categoria inserida no modelo teremos como categoria de referência os países que não promovem abertamente qualquer das categorias analisadas. Portanto, os valores dos efeitos apresentados pelos coeficientes ideológicos serão os resultados em comparação aos países que não se posicionam ideologicamente de forma aberta. 
+	
+  O coeficiente de países nacionalistas apresenta efeito de 1.1671e-01 sobre a variável dependente, em relação aos países não ideológicos. O intervalo de confiança deste coeficiente é o erro padrão de 4.9292e-02 para mais e para menos do efeito. O modelo apresenta alta confiança sobre o coeficiente estando dentro do nível de confiança de 95%, uma vez que seu p-valor de 0.0193803* aponta a significância estatística do coeficiente. Podemos então inferir que países nacionalistas têm efeito positivo sobre a variável dependente, tendendo a aumentar os níveis de violação quando comparados aos países não abertamente ideológicos. 
+
+  O próximo coeficiente ideológico é de países abertamente socialistas ou comunistas. Para estes, temos um efeito de 7.8369e-02 sobre o nível de violação quando comparados à países não ideológicos. O erro padrão apresenta o intervalo de confiança de 5.0614e-02 para mais e para menos do efeito. Neste caso, o nível de confiança não se encontra dentro do parâmetro de 95%, visto o p-valor de 0.1239870, apesar de estar próximo à níveis razoáveis de confiança, não é possível fazer inferências confiáveis sobre os efeitos deste coeficiente.
+
+  Em relação à países caracterizados por uma ideologia restaurativa ou conservadora apresentaram em seu coeficiente efeito de 1.6217e-02 sobre a variável dependente, quando comparados aos países não abertamente ideológicos. O erro de padrão de 5.4188e-02 quando somado e subtraído do valor do coeficiente determina o intervalo de confiança para o efeito desta variável independente. No entanto, não é possível fazer inferências confiáveis sobre os países conservadores e restaurativos no presente modelo, pois o p-valor de 0.7652059, é excessivamente alto indicando baixa significância estatística dos resultados.
+
+  Os países que promovem ideologia separatista ou autonomista, verificamos um efeito negativo de -1.0495e-01 sobre o nível de violação, quando comparados à países que não promovem ideologia determinada. Este resultado apresenta intervalo de confiança de 8.3817e-02 para mais e para menos do coeficiente, visto seu erro padrão. Entretanto, a significância estatística do coeficiente não é razoável para se fazer inferências, uma vez que o p-valor de 0.2128090 é demasiadamente alto o que não proporciona nível de confiança dentro dos padrões acadêmicos.
+
+  Encerrando os coeficientes ideológicos verificamos o coeficiente de países religiosos que apresentam efeito de 1.8018e-01 sobre o nível de violação, em relação a países não abertamente ideológicos. O erro padrão de 5.9968e-02 para mais e para menos do efeito estabelece o intervalo de confiança para esta variável independente. O p-valor de 0.0031955** apresenta alto nível de confiança e relevância estatística dos resultados. Portanto, é possível interpretar que regimes religiosos tendem a ter efeitos positivos sobre a variável dependente, aumentando os níveis de violações à democracia.
+
+  Nossa variável independente de controle que apresenta o rendimento bruto nacional per capta, nos possibilita interpretar os efeitos da economia de cada país sobre os níveis de violação à democracia incluindo a desinformação. O coeficiente apresenta efeito de -2.7088e-06 sobre a variável dependente para um aumento unitário da variável de economia. O erro padrão do coeficiente estabelece intervalo de confiança de 7.2803e-07 para mais e para menos. Temos alto nível de confiança que se retira do p-valor de 0.0002953***, apontando a relevante significância estatística desta variável. Assim, pode-se inferir que países com melhor economia nacional irão tender a ter efeito negativo sobre o nível de violação à democracia e desinformação.
+
+  Outras variáveis independentes pelas quais controlamos são a taxa de incidência de casos confirmados por país e a taxa de fatalidade do vírus por país. Este controle se faz necessário pela influência do número de casos e mortes sobre a tomada de decisão em relação às medidas preventivas, como quarentena, fechamento de fronteiras e imposições sobre o uso de materiais de proteção para a sociedade civil. As violações à democracia, portanto, tem cunho de se perfazer no modo de efetivação dessas medidas, como o envolvimento militar e o abuso de poder e violência por parte dos agentes de segurança dos respectivos países.
+
+  A incidência de casos confirmados apresenta efeito de 3.4463e-05 sobre a variável dependente. O intervalo de confiança é estabelecido pelo erro padrão, sendo de 1.9742e-05 para mais ou para menos do coeficiente. A significância estatística dos resultados se encontra fora do padrão de nível de confiança de 95%, visto o p-valor de 0.0832526. Consequentemente, é possível inferir com 90% de confiança que o aumento da taxa de incidência de casos confirmados tem relação positiva com o aumento do nível de violações à democracia e desinformação.
+
+  Por fim, a taxa de fatalidade tem -2.1638e-01 como efeito na variável dependente. O intervalo de confiança se perfaz pelo coeficiente adicionado e subtraído do erro padrão de 4.2890e-01. No entanto, não é possível inferir com confiança sobre este resultado, pois o p-valor de 0.6147690 não se encontra dentro do padrão de 95%, não sendo estatisticamente relevante. 
+
+  Com a finalidade de compreender a qualidade do modelo, observamos o R², medida que apresenta a porção da variável dependente que é explicada pelos resultados do modelo estatístico. A presente regressão apresenta R² de 0.4098, o que indica que o modelo explica 40.98% sobre o nível de violações antidemocráticas. No entanto, quando o R² é ajustado essa porcentagem cai para 36.86%. O nível de confiança da regressão em geral, que pode ser observado a partir de seu p-valor de 1.694e-11, apresenta alta significância estatística dos resultados.
+  
+```{r, fig.align='center'}
+library(dotwhisker)
+
+dwplot(regressao,
+       vline = geom_vline(xintercept = 0, colour = "grey60", linetype = 2,
+                          conf.level = .95))
+```
+
+  O gráfico acima apresenta os coeficientes da regressão e respectivos intervalos de confiança. Podemos então observar que as democracias e o fator econômico dos países tem significância estatística para o modelo, pois seus intervalos de confiança se encontram longe da linha zero de referência. Quanto ao aspecto ideológico dos países, verificamos que somente países nacionalistas e religiosos irão apresentar bom nível de confiança por seu inervalo não ultrapassar a linha pontilhada, enquanto países socialistas ou comunistas, restaurativos ou conservadores e separatistas e autonomistas não representam significância estatística quando comparados a países sem ideologia determinada, visto que seus intervalos de confiança compreendem o valor zero. O mesmo ocorre para nossas variáveis de controle da taxa de incidência e taxa de fatalidade, uma vez que seus intervalos ultrapassam a linha de referência.
+
+## 2.3 CONSIDERANDO A INTERAÇÃO
+
+Analisada a regressão linear multivariada acima passaremos à verificação dos coeficientes do modelo quando consideramos uma interação entre as variáveis de regime político e rendimento bruto nacional per capta para verificar o efeito coordenado destes fatores. O modelo toma como categoria de referência regimes autocráticos que para os coeficientes considerados separadamente na regressão com interação perdem sua significância estatística, enquanto outras adquirem maior nível de confiança, como os regimes socialistas ou comunistas. A interação pertinente às variáveis de regime e de economia apresenta significância estatística por seu p-valor de 4.52e-06***. O efeito das variáveis em interação é de -5.446e-06 sobre a variável dependente, com erro padrão de 1.137e-06. É possível, portanto, deduzir que países democráticos com melhor condição econômica tendem a ter baixos níveis de violação à democracia quando comparados à países autocráticos. 
+  
+```{r}
+regressao <- lm(pandem ~ Regime + Nacionalista + Socialista_Comunista + 
+                  Restaurativo_Conservador + Separatista_Autonomista + Religioso + Regime*GNIpercap + Incidence_Rate + Fatality.Ratio, data = data)
+
+summary(regressao)
+```
+  
+Contando com a interação entre as variáveis a qualidade do modelo para explicar a variável dependente aumentou. O R² agora é de 0.4995, ou 49,95% do nível de violação à democracia é explicado pela regressão. Quando ajustado o R² diminui para 46,04% ainda melhor qualidade que a regressão quando não consideramos a interação. O p-valor de 3.118e-15 aponta a significância estatística dos resultados em geral, com alto nível de confiança.
+
+```{r, fig.align='center'}
+library(sjPlot)
+
+plot_model(regressao, type = "pred", 
+           terms = c("Regime", "GNIpercap"), 
+           ci.lvl = 0.9)
+```
+
+  No intuito de melhor compreender os resultados que a interação nos oferece passamos à análise do gráfico acima. Assim, podemos dizer com 95% de confiança que países democráticos com melhores condições econômicas tenderam a violar menos a democracia, enquanto países democráticos economicamente piores tendem a ter níveis mais elevados de violação à democracia. Quanto aos regimes autocráticos a situação econômica dos países parece não ser fator relevante para diminuir os níveis de violação à democracia no contexto do Covid-19, na verdade estes níveis permanecem os mesmo para os diversos estados econômicos ora apresentados.
+  
+  Abaixo representamos gráfico multivariado que considera o tipo de regime no eixo x - autocráticos em vermelho, democráticos em azul - o nível de rendimento bruto nacional per cepta no eixo y - de baixo para alto - demonstrando o nível de violações antidemocráticas para as observações do banco de dados utilizado. A representação gráfica reafirma a hipótese de que países democráticos com melhores condições econômicas tendem a terem menores níveis de violações à democracia. Enquanto, o países democráticos com níveis menores de rendimento bruto per capta tendem à violar mais as garantias democráticas de seus cidadãos no contexto de pandemia. Os regimes autocráticos, no entanto, revelam certa homogeneidade no que tange niveis de violações, que variam em maior parte entre 0.3 a 0.5, independentemente de questões econômicas. 
+
+```{r, fig.align='center'}
+ggplot(data, aes(Regime, GNIpercap, size = pandem, color = Regime)) +
+  geom_jitter()+
+  theme_minimal()
+```
+
+  A tabela abaixo apresenta as aproximações dos efeitos estimados de cada variável independente sobre os níveis de violações à democracia, considerando os 139 países da amostra. Note que os baixos índices para a variável de rendimento bruto per capta se dá devido ao modo de mensuração dessa variável, devido à ser uma grandeza em que o aumento de unitário (1000 doláres) para o GNIpercap tem baixo efeito sobre a variável dependente. Enquanto a taxa de incidência, como observado nos resultados acima, não mostra evidências de influência sobre os níveis de violação. Por fim, a partir dos resultados do modelo é possível inferir, com 95% de confiança, que países nacionalistas, socialistas ou comunistas e países religiosos irão tender à níveis maiores de violação antidemocráticas perante as medidas contra o Covid-19. Já outras ideologias, como conservadores e autonomistas não apresentam efeito relevante sobre a variável estudada. Com a interação, percebemos que os regimes democráticos com melhor rendimento bruto per capta tenderão à respeitar mais as garantiais fundamentais da população. O modelo estatístico apresentado tem capacidade de explicar de 46% a 50% da variável dependente estudada, o que indica a alta qualidade da regressão multivariada ora utilizada.
+  
+
+```{r, fig.align='center', results='asis'}
+library(stargazer)
+stargazer(regressao,
+          type='html')
+```
+
+
+  Ao retornarmos ao questionamento teórico que direcionou nossa análise, entendemos que os resultados empíricos reforçam a assertiva de que os países autoritários tenderão à violações de garantias fundamentais, como liberdade midiática, publicidade e integridade física dos cidadãos, não tendo papel influenciador o estado econômico destes países. Por outro lado, os regimes democráticos contam com tendência oposta na qual, no entanto, deve ser considerada a economia destes países, visto que os países mais ricos violam menos à democracia que países mais pobres.
+  
+  Entretanto, não queremos dizer com tais dados que as medidas contra o aumento dos casos pelo Covid-19 são desleais aos princípios democráticos. Pelo contrário, sua implementação e a aderência à sua correta efetividade são basilares para o combate à pandemia. Portanto, a cooperação e transparência devem ser os volantes nas tomadas de decisões por parte dos governantes em relação à crise sanitária. Pois somos todos sucetíveis ao coronavírus, seja por seus sintomas físicos, seja pelos impactos socioeconômicos que virão. Por isso, o acesso à informação de qualidade, a inteligência em relação às medidas de proteção e o respeito ao outro representam os valores que podem trazer equilíbrio no enfrentamento das circunstâncias infortúnias atuais.
+  
+## CONCLUSÃO
+
+Este estudo buscou demonstrar a efetividade do modelo de regressão linear multivariada para explicar o aumento de medidas austeras contra a pandemia por parte de regimes autocráticos, tendendo a violações democráticas e desinformação. No intuito de aclarar o processo teórico, nos voltamos aos questionamentos cruciais para o processo de construção teórica, quais sejam: i) Existe um mecanismo causal convincente que conecta X a Y?; ii) Podemos descartar a possibilidade de que Y causa X?; iii) Existe covariação em X e Y?; iv) Foi possível controlar pelas variáveis Z possíveis que podem alterar a relação entre X e Y?
+	
+  Como já introduzido, a teoria se baseia nos estudos desenvolvidos no entorno da questão do autoritarismo e seus efeitos para a tomada de medidas preventivas contra o Covid-19. O isolamento social imposto em alguns países pode levar a violência policial, o envolvimento de militares, à limitações à mídia e desinformação. O crescente apoio à governos mais autoritários em tempos de crise, pode oferecer ameaças às garantias democráticas individuais e coletivas. No entanto, como o dados sobre os regimes políticos que utilizamos no modelo concernem ao ano de 2019, quando ainda o contexto do novo vírus não era configurado como pandemia, podemos afirmar que para esta análise nossa variável dependente de violações à democracia não tem cunho de afetar o tipo de regime político para o contexto avaliado. 
+	
+  Existe covariação entre os estilos de governo e a proporção de austeridade propagada nas medidas preventivas. Como se verifica a partir da análise dos testes de hipótese acima apresentados. As variáveis de controle, como a taxa de incidência, a taxa de fatalidade, a ideologia dos países e o crescimento nacional bruto per capta são as variáveis mensuráveis que possivelmente afetam em nossa variável dependente, até o presente as que logramos encontrar e incluir no modelo.
+  
+  Pelo exposto, verificamos que o modelo está adequado à operacionalização e confirmanção de nossa hipótese. A amostragem randômica de nossos dados proporciona validade interna aos achados empíricos e os resultados apontam à alto nível de confiança sobre a validação de nossa teoria de que países autocráticos tendem a violar à democracia em tempos de pandemia. Enquanto, países democráticos tem níveis menores de violação que diminuem ainda mais à medida de sua condição econômica. Além disso, percebemos que países ideologicamente configurados como nacionalistas, socialistas ou comunistas e religiosos seguem a tendência de maiores violações quando comparados à países que não promovem abertamente qualquer das ideologias ora analisadas. As variáveis de controle sobre a incidência de casos e a fatalidade do vírus não mostraram evidências de influência expressiva sobre a variável dependente. 
+
+  O presente estudo se mostra relevante ao cenário global de crise sanitária e aos desafios que a pandemia oferece às diversas sociedades afetadas. O século XXI envolve ainda o contexto da infodemia, e portanto, se faz imprescindível a inclusão do tema da desinformação como artifício que viola à democracia. O combate ao Covid-19 demanda a cooperação mútua entre os governos e a adesão da sociedade civil às medidas preventivas, com transparência e publicidade das informações sendo direito de todos. Atentamos à importância de pesquisas futuras no pós-pandemia, quando as implicações se tornem mais definitivas e as interpretações mais precisas sobre as sequelas do Covid-19 para as diversas sociedades.
+
+
+## Notas
+
+¹ OMS define “infodemia” como uma quantidade excessiva de informações inseguras sobre um determinado problema, em especial associadas às buscas reativas em tempos de grandes medos, o que pode dificultar os caminhos para as soluções ao criar tumultos e desconfiança entre leigos.
+
+² retirado do banco Countries in the world population em worldometer, baseado na United Nations Population Divison.
+
+³ Lista de países disponível em https://www.un.org/en/member-states/index.html.
+
+## Bibliografia:
+
+AMAT, Francesc, Andreu ARENAS, Albert Falcó-Gimeno & Jordi MUÑOZ. 2020. Pandemics Meet Democracy. Experimental Evidence from the COVID-19 Crisis in Spain.
+
+BLAIS, André, Damien BOL, Marco GIANI & Peter J. LOEWEN. 2020. The Effect of COVID-19 Lockdowns on Political Support: Some Good News for Democracy? European Journal of Political Research.
+
+CEPALUNI, Gabriel, Michael DORSCH & Réka BRANYICZKI. 2020. Political Regimes and Deaths in the Early Stages of the COVID-19 Pandemic. Disponível em SSRN 3586767.
+
+Coppedge, Michael, John Gerring, Carl Henrik Knutsen, Staffan I. Lindberg, Jan Teorell, David Altman, Michael Bernhard, M. Steven Fish, Adam Glynn, Allen Hicken, Anna Lührmann, Kyle L. Marquardt, Kelly McMann, Pamela Paxton, Daniel Pemstein, Brigitte Seim, Rachel Sigman, Svend-Erik Skaaning, Jeffrey Staton, Agnes Cornell, Lisa Gastaldi, Haakon Gjerløw, Valeriya Mechkova, Johannes von Römer, Aksel Sundtröm, Eitan Tzelgov, Luca Uberti, Yi-ting Wang, Tore Wig, and Daniel Ziblatt. 2020. "V-Dem Codebook v10" Varieties of Democracy (V-Dem) Project.
+
+DAHL, Robert. 1971. Polyarchy. New Haven: Yale University Press.
+
+DE VRIES, Catherine E, Bert N Bakker, Sara Hobolt & Kevin Arceneaux. 2020. Crisis Signaling: How Italy’s Coronavirus Lockdown Affected Incumbent Support in Other European Countries. Disponível em SSRN 3606149.
+
+FLINDERS, Matthew. 2020. Democracy and the Politics of Coronavirus: Trust, Blame and Understanding. Parliamentary Affairs.
+
+LINS, R., REBOUÇAS, I., & DOMINGOS, A. (2020). Is Democracy Really The Best Medicine?. Revista Do Serviço Público, 71, 70-90. https://doi.org/10.21874/rsp.v71i0.4936.
+
+MENDONÇA, Heloísa. 2020. Queda histórica dos PIBs de EUA e Alemanha prenunciam tamanho do tombo da economia brasileira. São Paulo, El País Brasil. Disponível em https://brasil.elpais.com/economia/2020-07-31/queda-historica-dos-pibs-de-eua-e-alemanha-prenunciam-tamanho-do-tombo-da-economia-brasileira.html.
+
+SCHWARTZ, Jonathan. 2012. Compensating for the ‘Authoritarian Advantage in Crisis Response: A Comparative Case Study of SARS Pandemic Responses in China and Taiwan. Journal of Chinese Political Science 17(3):313–331.
+
+TREIN, Philipp. 2020. The Paradox of Prevention: Authoritarian Past and Liberal Democracy in Times of Crisis. Disponível em SSRN: https://ssrn.com/abstract=3625523 ou http://dx.doi.org/10.2139/ssrn.3625523
+
+WITTEN, Guy D. & KELLSTEDT, Paul M. 2018. The fundamentals of Political Science Research. Third Edition. Cambrigde University Press. ISBN 978-1-316-64267-2.
